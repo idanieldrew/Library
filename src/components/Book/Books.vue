@@ -6,7 +6,8 @@
 
 <script>
 import Book from "./Book.vue";
-import { mapGetters, mapActions } from "vuex";
+import {useStore} from "vuex";
+import {computed} from "vue";
 
 export default {
   name: "books",
@@ -20,22 +21,14 @@ export default {
   components: {
     Book,
   },
-  methods: {
-    ...mapActions(["fetchBooks", "fetchBooksWithCategory"]),
-  },
-  computed: mapGetters(["allBooks"]),
-  created() {
-    if (this.$route.query && this.url) {
-      this.fetchBooksWithCategory(this.url);
-    } else {
-      this.fetchBooks();
-    }
-  },
 
-  watch: {
-    url() {
-      fetchBooksWithCategory(this.url);
-    },
+  setup() {
+    const store = useStore()
+
+    store.dispatch('fetchBooks')
+    const allBooks = computed(() => store.getters.allBooks)
+
+    return {allBooks}
   },
 };
 </script>

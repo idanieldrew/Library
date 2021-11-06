@@ -9,7 +9,7 @@
 <script>
 import SingleHero from "@/components/Hero/SingleHero.vue";
 import Login from "@/components/Login.vue";
-import { mapGetters, mapActions } from "vuex";
+import {mapActions} from "vuex";
 
 export default {
   components: {
@@ -20,7 +20,8 @@ export default {
   methods: {
     ...mapActions(["log"]),
     login(value) {
-      this.log(value).then(()=>this.$router.push("/"));
+      this.log(value)
+          .then(() => this.$router.push("/"));
     },
   },
 };

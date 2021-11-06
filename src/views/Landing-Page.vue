@@ -3,7 +3,9 @@
     <Hero />
     <div class="land-page grid grid-cols-6 py-5">
       <div class="col-span-2 pl-5">
-        <Category />
+        <Category v-for="category in allCategories" :key="category.id" :slug="category.slug" :name="category.name"
+                  @filterBook="filtering"
+        />
       </div>
       <div class="col-span-4 pl-2 flex flex-wrap">
         <Books />
@@ -13,32 +15,32 @@
 </template>
 <script>
 import Books from "@/components/Book/Books.vue";
-import { mapGetters, mapActions } from "vuex";
+import {mapActions, useStore} from "vuex";
 import Category from "@/components/Category.vue";
 import Hero from "@/components//Hero/MainHero.vue";
+import {computed} from "vue";
 
 export default {
   name: "land-page",
-  // data() {
-  //   return {
-  //     url: this.$route.query.category,
-  //   };
-  // },
   components: {
     Books,
     Category,
     Hero,
   },
 
-  // methods: {
-  //   ...mapActions(["fetchBooksWithCategory"]),
-  // },
+  setup() {
+    const store = useStore()
+    store.dispatch('fetchCategories')
+    const allCategories = computed(() => store.getters.allCategories)
 
-  // computed: mapGetters(["allBooks"]),
+    return {allCategories}
+  },
 
-  // mounted() {
-  //   this.fetchBooksWithCategory(this.url);
-    
-  // },
+  methods: {
+    ...mapActions(['fetchBooksWithCategory']),
+    filtering(value) {
+      this.fetchBooksWithCategory(value)
+    }
+  }
 };
 </script>
